@@ -1,0 +1,53 @@
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  Unique,
+  UpdateDateColumn
+} from 'typeorm'
+import { User } from '../../users/entities/users.entity'
+import { Currencies } from '../constants/Currencies'
+
+@Entity()
+export class Wallet {
+  @PrimaryGeneratedColumn()
+  id: number
+
+  @Column({ type: 'varchar', length: 50 })
+  name: string
+
+  @Column()
+  balance: number
+
+  @Column({ type: 'enum', enum: Currencies })
+  currency: Currencies
+
+  @Column()
+  @Unique([ 'address' ])
+  address: string
+
+  @Column()
+  privateKey: string
+
+  @Column()
+  publicKey: string
+
+  @Column({ default: false })
+  deleted: boolean
+
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date
+
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  updatedAt: Date
+
+  @ManyToOne(
+    () => User,
+    user => user.wallets
+  )
+  @JoinColumn()
+  user: User
+}
