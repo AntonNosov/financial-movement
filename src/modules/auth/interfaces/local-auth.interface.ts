@@ -1,3 +1,4 @@
+import { User } from '../../users/interfaces/users.interface'
 import { Auth } from './auth.interface'
 
 export interface LocalAuth extends Auth {
@@ -5,5 +6,5 @@ export interface LocalAuth extends Auth {
   password: string;
   firstName: string;
   lastName: string;
-  user?: object;
+  user?: User;
 }

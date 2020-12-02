@@ -6,20 +6,14 @@ import { ValidationPipe } from '../../../common/validations/validation.pipe'
 import { LocalAuthDto } from '../dto'
 import { AuthInterceptor } from '../interceptors/auth.interceptor'
 
-@Controller()
+@Controller('auth')
 @ApiTags('Auth')
 @UseFilters(QueryFailedExceptionFilter)
 export class AuthController {
-  @Post('v1/auth/local')
+  @Post('local')
   @UseGuards(AuthGuard)
   @UseInterceptors(AuthInterceptor)
   authLocal(@Body(ValidationPipe) authDto: LocalAuthDto) {
     return authDto
-  }
-
-  @Post('v1/auth/local/register')
-  @UseInterceptors(ResultInterceptor)
-  registerLocal(@Body(ValidationPipe) localRegister: LocalRegisterDto): Promise<User> {
-    return this.authService.register(localRegister, AuthServices.LOCAL)
   }
 }

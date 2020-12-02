@@ -22,6 +22,10 @@ export class WalletRepository extends Repository<Wallet> {
     return this.findOne(id)
   }
 
+  findByAddress(address: string): Promise<Wallet> {
+    return this.findOne({ address })
+  }
+
   createOne(wallet: WalletInterface): Promise<InsertResult> {
     return this.insert(wallet)
   }
@@ -29,13 +33,6 @@ export class WalletRepository extends Repository<Wallet> {
   async updateOne(walletId: number, wallet: WalletInterface): Promise<Wallet> {
     const walletRow = await this.findOne(walletId)
     if (!walletRow) throw new NotFoundException('Wallet is not found')
-    WalletRepository.updateWallet(walletRow, wallet)
-    return this.save(walletRow)
-  }
-
-  async createOrUpdate(wallet: WalletInterface, condition: object): Promise<Wallet> {
-    const walletRow = await this.findOne(condition)
-    if (!walletRow) return this.save(wallet)
     WalletRepository.updateWallet(walletRow, wallet)
     return this.save(walletRow)
   }

@@ -1,3 +1,4 @@
+import { Wallet } from '../../wallets/interfaces/wallets.interface'
 import { Roles } from '../constants/Roles'
 
 export interface User {
@@ -12,4 +13,5 @@ export interface User {
   deleted?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+  wallets?: Wallet[];
 }

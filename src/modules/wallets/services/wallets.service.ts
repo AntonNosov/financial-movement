@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, ServiceUnavailableException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import EthCrypto from 'eth-crypto'
 import { FindManyOptions, getCustomRepository, InsertResult } from 'typeorm'
 import { DeleteResult } from 'typeorm/query-builder/result/DeleteResult'
 import { WalletQueryParams } from '../constants/QueryParams'
@@ -25,7 +26,7 @@ export class WalletsService {
     return { ...queryParams, where }
   }
 
-  findAll(query: FindManyOptions<Wallet>): Promise<[ Wallet[], number ]> {
+  findAll(query: FindManyOptions<Wallet> = {}): Promise<[ Wallet[], number ]> {
     return this.walletRepository.findAll(query)
   }
 
@@ -33,16 +34,21 @@ export class WalletsService {
     return this.walletRepository.findById(id)
   }
 
-  async createOne(wallet: WalletInterface): Promise<InsertResult> {
+  findByAddress(address: string): Promise<Wallet> {
+    return this.walletRepository.findByAddress(address)
+  }
+
+  createOne(wallet: WalletInterface): Promise<InsertResult> {
+    const { privateKey, publicKey, address } = EthCrypto.createIdentity()
+    if (!privateKey || !publicKey || !address) throw new ServiceUnavailableException()
+    wallet.privateKey = privateKey
+    wallet.publicKey = publicKey
+    wallet.address = address
     return this.walletRepository.createOne(wallet)
   }
 
-  async updateOne(walletId: number, wallet: WalletInterface): Promise<Wallet> {
+  updateOne(walletId: number, wallet: WalletInterface): Promise<Wallet> {
     return this.walletRepository.updateOne(walletId, wallet)
-  }
-
-  createOrUpdate(wallet: WalletInterface, condition: object): Promise<Wallet> {
-    return this.walletRepository.createOrUpdate(wallet, condition)
   }
 
   removeOne(id: number): Promise<DeleteResult> {

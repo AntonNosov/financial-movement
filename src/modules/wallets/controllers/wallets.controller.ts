@@ -56,7 +56,7 @@ export class WalletsController {
   }
 
   @Post()
-  @Roles(getAdminRoles())
+  @Roles(getAllRoles())
   @UseInterceptors(CreateOneInterceptor)
   create(@Body(ValidationPipe) createWalletDto: CreateWalletDto): Promise<InsertResult> {
     return this.walletsService.createOne(createWalletDto)

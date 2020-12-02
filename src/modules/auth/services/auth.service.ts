@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { User } from '../../users/interfaces/users.interface'
+import { User as UserInterface } from '../../users/interfaces/users.interface'
 import { AuthServices, AuthType } from '../constants/auth.constants'
 import { LocalAuth } from '../interfaces/local-auth.interface'
 import { JwtStrategy } from '../strategies/jwt.strategy'
@@ -27,14 +27,7 @@ export class AuthService {
     return !!user
   }
 
-  async register(authData: LocalAuth, service: AuthType): Promise<User> {
-    await this.strategy[service].init(authData)
-    const user = await this.strategy[service].createOrUpdateUser()
-    delete user.passwordHash
-    return user
-  }
-
-  createUserToken(user: User): string {
+  createUserToken(user: UserInterface): string {
     return this.jwtStrategy.createToken({
       id: user.id,
       firstName: user.firstName,

@@ -7,6 +7,7 @@ import { EncryptionModule } from './modules/encryption/encryption.module'
 import { UsersModule } from './modules/users/users.module'
 import { WalletsModule } from './modules/wallets/wallets.module';
 import { TransactionsModule } from './modules/transactions/transactions.module';
+import { TestNetModule } from './modules/test-net/test-net.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { TransactionsModule } from './modules/transactions/transactions.module';
     UsersModule,
     EncryptionModule,
     WalletsModule,
-    TransactionsModule
+    TransactionsModule,
+    TestNetModule
   ],
   controllers: [],
   providers: []

@@ -7,7 +7,7 @@ services:
     container_name: postgres
     restart: always
     env_file:
-      - backend/.env
+      - .env
     ports:
       - "8432:5432"
     networks:
@@ -19,7 +19,7 @@ services:
     environment:
       - NODE=production
     env_file:
-      - backend/.env
+      - .env
     ports:
       - "3001:3001"
     depends_on:

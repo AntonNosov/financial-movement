@@ -9,7 +9,6 @@ import {
   UpdateDateColumn
 } from 'typeorm'
 import { User } from '../../users/entities/users.entity'
-import { Currencies } from '../constants/Currencies'
 
 @Entity()
 export class Wallet {
@@ -19,11 +18,8 @@ export class Wallet {
   @Column({ type: 'varchar', length: 50 })
   name: string
 
-  @Column()
+  @Column({ default: 0 })
   balance: number
-
-  @Column({ type: 'enum', enum: Currencies })
-  currency: Currencies
 
   @Column()
   @Unique([ 'address' ])
@@ -34,6 +30,9 @@ export class Wallet {
 
   @Column()
   publicKey: string
+
+  @Column()
+  nonce: number
 
   @Column({ default: false })
   deleted: boolean
