@@ -35,7 +35,7 @@ import { UserUpdateInterceptor } from '../interceptors/user-update.interceptor'
 import { User as UserInterface } from '../interfaces/users.interface'
 import { UsersService } from '../services/users.service'
 
-@Controller()
+@Controller('users')
 @ApiTags('Users')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -44,7 +44,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {
   }
 
-  @Get('v1/users')
+  @Get()
   @Roles(getAdminRoles())
   @UseInterceptors(FindAllInterceptor)
   findAll(@Query(ValidationPipe) query: QueryParamsDto): Promise<[ User[], number ]> {
@@ -52,27 +52,27 @@ export class UsersController {
     return this.usersService.findAll(preparedQuery)
   }
 
-  @Get('v1/users/whoami')
+  @Get('whoami')
   @Roles(getAllRoles())
   whoAmI(@UserInfo() user: UserInterface): UserInterface {
     return user
   }
 
-  @Get('v1/users/:id')
+  @Get(':id')
   @Roles(getAdminRoles())
   @UseInterceptors(FindOneInterceptor)
   findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
     return this.usersService.findById(id)
   }
 
-  @Post('v1/users')
+  @Post('')
   @Roles(getAdminRoles())
   @UseInterceptors(CreateOneInterceptor)
   create(@Body(ValidationPipe) createUserDto: CreateUserDto): Promise<InsertResult> {
     return this.usersService.createOne(createUserDto)
   }
 
-  @Put('v1/users/:id')
+  @Put(':id')
   @Roles(getAllRoles())
   @UseInterceptors(FindOneInterceptor, UserUpdateInterceptor)
   update(
@@ -82,7 +82,7 @@ export class UsersController {
     return this.usersService.updateOne(id, updateUserDto)
   }
 
-  @Delete('v1/users/:id')
+  @Delete(':id')
   @Roles(getAdminRoles())
   @UseInterceptors(ResultInterceptor, UserRemoveInterceptor)
   remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {

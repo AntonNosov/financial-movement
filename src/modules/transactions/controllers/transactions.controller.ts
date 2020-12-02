@@ -21,7 +21,8 @@ export class TransactionsController {
   @Post('transfer')
   @UseFilters(AllExceptionsFilter)
   async transfer(@User() user, @Body(ValidationPipe) transferTransactionDto: TransferTransactionDto) {
-    await this.transactionsService.transfer(user, transferTransactionDto)
+    const [ walletSource, walletDestination ] = await this.transactionsService.transfer(user, transferTransactionDto)
+    await this.transactionsService.setBalance(walletSource, walletDestination)
     return { result: 'success' }
   }
 }

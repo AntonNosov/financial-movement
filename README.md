@@ -22,5 +22,32 @@ for the problem at hand. Unit testing is also welcome.
 ## Time limit
 The assignment has been intentionally designed not to take much of your time, please try to complete it in several hours.
 
-##Handover
+## Handover
 Create a private github repository and share access with a contact provided by the recruiter.
+
+## Setup
+At first, copy `.env.example` to `.env`
+Then enter command: <br>
+`docker-compose up --build`
+
+Swagger docs on route: <br>
+`http://localhost:3001/api-docs`
+
+This project has migration, where set test data of database. <br>
+
+Test admin user:<br>
+| Login         | Password        |
+| ------------- |:---------------:|
+| admin         | admin_password  |
+
+Test users from migration:<br>
+| Login         | Password        |
+| ------------- |:---------------:|
+| mark          | mark_password   |
+| leon          | leon_password   |
+| andrew        | andrew_password |
+
+To restart: <br>
+`docker-compose down`
+<br>
+`docker-compose up --build`

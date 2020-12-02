@@ -1,6 +1,5 @@
 import { NotFoundException } from '@nestjs/common'
-import { EntityRepository, InsertResult, Repository } from 'typeorm'
-import { DeleteResult } from 'typeorm/query-builder/result/DeleteResult'
+import { EntityRepository, Repository } from 'typeorm'
 import { Wallet } from '../entities/wallets.entity'
 import { Wallet as WalletInterface } from '../interfaces/wallets.interface'
 
@@ -19,15 +18,11 @@ export class WalletRepository extends Repository<Wallet> {
   }
 
   findById(id: number): Promise<Wallet> {
-    return this.findOne(id)
+    return this.findOne(id, { relations: [ 'user' ] })
   }
 
   findByAddress(address: string): Promise<Wallet> {
     return this.findOne({ address })
-  }
-
-  createOne(wallet: WalletInterface): Promise<InsertResult> {
-    return this.insert(wallet)
   }
 
   async updateOne(walletId: number, wallet: WalletInterface): Promise<Wallet> {
@@ -35,9 +30,5 @@ export class WalletRepository extends Repository<Wallet> {
     if (!walletRow) throw new NotFoundException('Wallet is not found')
     WalletRepository.updateWallet(walletRow, wallet)
     return this.save(walletRow)
-  }
-
-  removeOne(id: number): Promise<DeleteResult> {
-    return this.delete(id)
   }
 }

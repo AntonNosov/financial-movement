@@ -1,8 +1,8 @@
-import { Injectable, ServiceUnavailableException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import EthCrypto from 'eth-crypto'
-import { FindManyOptions, getCustomRepository, InsertResult } from 'typeorm'
-import { DeleteResult } from 'typeorm/query-builder/result/DeleteResult'
+import { getCustomRepository } from 'typeorm'
+import { getAdminRoles } from '../../users/constants/Roles'
+import { User } from '../../users/interfaces/users.interface'
 import { WalletQueryParams } from '../constants/QueryParams'
 import { Wallet } from '../entities/wallets.entity'
 import { Wallet as WalletInterface } from '../interfaces/wallets.interface'
@@ -26,7 +26,10 @@ export class WalletsService {
     return { ...queryParams, where }
   }
 
-  findAll(query: FindManyOptions<Wallet> = {}): Promise<[ Wallet[], number ]> {
+  findAll(user: User = null, query: any = {}): Promise<[ Wallet[], number ]> {
+    if (user && !getAdminRoles().includes(user.role)) {
+      query.where.user = { id: user.id }
+    }
     return this.walletRepository.findAll(query)
   }
 
@@ -38,20 +41,7 @@ export class WalletsService {
     return this.walletRepository.findByAddress(address)
   }
 
-  createOne(wallet: WalletInterface): Promise<InsertResult> {
-    const { privateKey, publicKey, address } = EthCrypto.createIdentity()
-    if (!privateKey || !publicKey || !address) throw new ServiceUnavailableException()
-    wallet.privateKey = privateKey
-    wallet.publicKey = publicKey
-    wallet.address = address
-    return this.walletRepository.createOne(wallet)
-  }
-
   updateOne(walletId: number, wallet: WalletInterface): Promise<Wallet> {
     return this.walletRepository.updateOne(walletId, wallet)
-  }
-
-  removeOne(id: number): Promise<DeleteResult> {
-    return this.walletRepository.removeOne(id)
   }
 }

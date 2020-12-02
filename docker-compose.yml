@@ -14,7 +14,7 @@ services:
       - webnet
 
   backend:
-    build: Dockerfile
+    build: .
     container_name: backend
     environment:
       - NODE=production
